@@ -1,0 +1,11 @@
+.login-page {
+  background-image: linear-gradient(#eb01a54f, #d136313a),
+    url("/assets/images/bg_login.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  .login-form {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1rem 2rem 1rem 2rem;
+  }
+}
