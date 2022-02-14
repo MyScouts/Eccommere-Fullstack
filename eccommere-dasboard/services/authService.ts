@@ -31,3 +31,35 @@ export const adminLoginService = async ({
     return 500;
   }
 };
+
+
+export const registerService = async ({ firstName, lastName, email, password, phoneNumber, roles }:
+  { firstName: string, lastName: string, email: string, password: string, phoneNumber: string, roles: string | null | undefined }) => {
+
+  try {
+    const url = `${BASE_URL}auth/register`;
+    const response = await RequestHelper.post(url, {
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      roles
+    });
+    if (response.status === 200) {
+      setToken(response.data.successToken);
+      setUser({
+        userId: response.data.userId,
+        email: response.data.email,
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+      });
+    }
+    return response.status;
+
+  } catch (error) {
+    console.log("🚀 ~ file: authService.ts ~ line 61 ~ error", error)
+    return 500;
+  }
+
+}

@@ -1,5 +1,6 @@
 import React from 'react'
 import DefaultLayout from '../../layouts/default/DefaultLayout'
+import UserLayout from '../../layouts/user/UserLayout'
 
 const HomeIndex = () => {
     return (
@@ -8,5 +9,5 @@ const HomeIndex = () => {
         </div>
     )
 }
-HomeIndex.layout = DefaultLayout
+HomeIndex.layout = UserLayout
 export default HomeIndex

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { LayoutProps } from '../PageWithLayout'
 import { Layout, Menu, Breadcrumb, Row, Space, Popconfirm, message } from 'antd';
 import {
@@ -11,6 +11,7 @@ import {
     LogoutOutlined
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import { getUser } from '../../utils/storageUtil';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -52,6 +53,17 @@ const DefaultLayout: LayoutProps = ({ children }) => {
     const [collapsed, setCollapsed] = useState<boolean>(false)
     const onCollapse = () => setCollapsed(!collapsed)
     const router = useRouter()
+
+    useEffect(() => {
+        const user = getUser()
+
+        if (user && user.roles === 'admin') {
+        } else {
+            router.push('/')
+            message.error('You are not authorized to access this page')
+        }
+    }, [])
+
 
     function logoutHanlder() {
         localStorage.removeItem('TOKEN');
