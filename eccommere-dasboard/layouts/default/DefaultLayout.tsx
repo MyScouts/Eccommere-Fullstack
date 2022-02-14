@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import type { LayoutProps } from '../PageWithLayout'
-import { Layout, Menu, Breadcrumb, Row, Space, Popconfirm, message } from 'antd';
+import { Layout, Menu, Breadcrumb, Row, Space, Popconfirm, message, Avatar } from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
@@ -12,6 +12,10 @@ import {
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import { getUser } from '../../utils/storageUtil';
+import { IUserInfo } from '../../interface/user';
+import Text from 'antd/lib/typography/Text';
+import { getUserInfoService } from '../../services/userService';
+import Link from 'next/link';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -20,7 +24,7 @@ const menuObjects = [
     {
         title: 'Home',
         icon: <HomeOutlined />,
-        path: '/dasboard',
+        path: '/admin/dashboard',
         key: 1,
     },
     {
@@ -32,16 +36,19 @@ const menuObjects = [
                 title: 'Users',
                 icon: <UserOutlined />,
                 key: 3,
+                path: '/admin/dashboard/users',
             },
             {
                 title: 'Products',
                 icon: <UserOutlined />,
                 key: 4,
+                path: '/admin/dashboard/products',
             },
             {
                 title: 'Orders',
                 icon: <UserOutlined />,
                 key: 5,
+                path: '/admin/dashboard/orders',
             }
         ]
     },
@@ -53,10 +60,22 @@ const DefaultLayout: LayoutProps = ({ children }) => {
     const [collapsed, setCollapsed] = useState<boolean>(false)
     const onCollapse = () => setCollapsed(!collapsed)
     const router = useRouter()
+    const [userInfo, setUserInfo] = useState<IUserInfo | null>(null)
+
+
+    const getUserInfo = async () => {
+        setUserInfo(await getUserInfoService());
+    }
 
     useEffect(() => {
-        const user = getUser()
+        getUserInfo();
+    }, [])
 
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const user = getUser()
+        console.log("🚀 ~ file: DefaultLayout.tsx ~ line 79 ~ useEffect ~ user", user)
         if (user && user.roles === 'admin') {
         } else {
             router.push('/')
@@ -72,7 +91,7 @@ const DefaultLayout: LayoutProps = ({ children }) => {
     }
 
     return (
-        <Layout style={{ minHeight: '100vh' }} hasSider>
+        <Layout style={{ minHeight: '100vh' }} hasSider className='admin-layout-page'>
             <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} style={{
                 overflow: 'auto',
                 height: '100vh',
@@ -93,7 +112,7 @@ const DefaultLayout: LayoutProps = ({ children }) => {
                                 <SubMenu key={menu.key} icon={menu.icon} title={menu.title}>
                                     {menu.children.map((child, childIndex) => {
                                         return (
-                                            <Menu.Item key={child.key} icon={child.icon}>
+                                            <Menu.Item key={child.key} icon={child.icon} onClick={() => router.push(child.path)}>
                                                 {child.title}
                                             </Menu.Item>
                                         )
@@ -102,7 +121,7 @@ const DefaultLayout: LayoutProps = ({ children }) => {
                             )
                         }
                         return (
-                            <Menu.Item key={menu.key} icon={menu.icon}>
+                            <Menu.Item key={menu.key} icon={menu.icon} onClick={() => router.push(menu.path)}>
                                 <span>{menu.title}</span>
                             </Menu.Item>
                         )
@@ -121,7 +140,8 @@ const DefaultLayout: LayoutProps = ({ children }) => {
                     }}
                 >
                     <Row align='middle' justify='end' style={{ padding: "0px 2rem" }}>
-
+                        <Text className='hello-text-header' onClick={() => router.push('/admin/profile')}>Hello, {userInfo?.firstName} {userInfo?.lastName}</Text>
+                        <Avatar src={`https://joeschmoe.io/api/v1/random`} style={{ marginRight: 15 }} />
                         <div className='button-event' >
                             <Popconfirm placement='bottomRight' title="Do you wan't logout!" okText="Yes" cancelText="No" onConfirm={logoutHanlder}>
                                 <LogoutOutlined style={{ fontSize: 20, color: "#FC4F4F" }} />

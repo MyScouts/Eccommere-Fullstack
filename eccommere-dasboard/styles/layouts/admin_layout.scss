@@ -1,0 +1,13 @@
+.admin-layout-page {
+  .hello-text-header {
+    cursor: pointer;
+    margin-right: 10px;
+    text-transform: capitalize;
+    font-weight: bold;
+
+    // 
+    &:hover {
+      color: #ff4d4f;
+    }
+  }
+}

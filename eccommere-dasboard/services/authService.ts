@@ -10,7 +10,7 @@ export const adminLoginService = async ({
   password: string;
 }) => {
   try {
-    const url = `${BASE_URL}admin/auth/login`;
+    const url = `${BASE_URL}auth/login`;
     const response = await RequestHelper.post(url, {
       email,
       password,
@@ -23,6 +23,7 @@ export const adminLoginService = async ({
         email: response.data.email,
         firstName: response.data.firstName,
         lastName: response.data.lastName,
+        roles: response.data.roles,
       });
     }
     return response.status;
@@ -53,6 +54,7 @@ export const registerService = async ({ firstName, lastName, email, password, ph
         email: response.data.email,
         firstName: response.data.firstName,
         lastName: response.data.lastName,
+        roles: response.data.roles,
       });
     }
     return response.status;

@@ -2,8 +2,8 @@
 @import "./pages/login.scss";
 @import "./pages/register.scss";
 @import "./pages/user_layout.scss";
-
-// 
+@import "./layouts/admin_layout.scss";
+//
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 html,
 body {
@@ -35,4 +35,14 @@ a {
 
 .button-event {
   cursor: pointer;
+}
+
+.button-action {
+  cursor: pointer !important;
+  margin-right: 10px !important;
+  transition: all 0.3s ease-in-out !important;
+  //
+  &:hover {
+    color: #ff4d4f !important;
+  }
 }

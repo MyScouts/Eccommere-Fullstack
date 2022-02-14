@@ -31,6 +31,8 @@ let productAttributeSchema = new Schema({
     timestamps: true,
     toJSON: {
         transform: (doc, ret) => {
+            if (ret.createdAt) ret.createdAt = ret.createdAt.toLocaleString()
+            if (ret.updatedAt) ret.updatedAt = ret.createdAt.toLocaleString()
             delete ret.__v
             delete ret.logical_delete
             return ret;

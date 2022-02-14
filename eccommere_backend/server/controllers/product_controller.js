@@ -5,44 +5,50 @@ let mongoose = require('mongoose')
 const { converterServerToRealPath } = require('../helpers/converter_helper')
 const CategoryModel = require('../models/category_model')
 const generateSequence = require('../helpers/sequence_helper')
+const { responseSuccess } = require('../common/reponseCommon')
 
 let createProduct = async (req, res) => {
     let { productName, description, price, quantity, categoryIds } = req.body
-    let avatar = converterServerToRealPath(req.files[0].path)
-    let background = converterServerToRealPath(req.files[1].path)
-    categoryIds = categoryIds.split(',')
-    let categoryFind = await CategoryModel(mongoose.Types.ObjectId(categoryIds[0]))
 
-    if (categoryFind) {
-        productId = await generateSequence('PR', 'THH')
-        let newProduct = await ProductModel({
-            productName: productName,
-            quantity: quantity,
-            background: background,
-            avatar: avatar,
-            price: price,
-            categories: categoryIds,
-            description: description,
-            productId: productId
-        })
+    // categoryIds = categoryIds.split(',')
+    // let categoryFind = await CategoryModel(mongoose.Types.ObjectId(categoryIds[0]))
 
-        await newProduct.save()
-
-        res.status(200).json({
-            status: 200,
-            success: true,
-            message: "",
-            data: newProduct
-        })
-
-    } else {
-        res.status(400).json({
-            status: 400,
-            success: false,
-            message: "",
-            data: null
-        })
+    // if (categoryFind) {
+    productId = await generateSequence('PR', 'MB')
+    let newProduct = await ProductModel({
+        productName: productName,
+        quantity: quantity,
+        // background: background,
+        // avatar: avatar,
+        price: price,
+        // categories: categoryIds,
+        description: description,
+        productId: productId
+    })
+    console.log("🚀 ~ file: product_controller.js ~ line 29 ~ createProduct ~ req.files", req.files)
+    if (req.files && req.files.length > 0) {
+        newProduct.avatar = converterServerToRealPath(req.files[0].path ?? "");
+        newProduct.background = converterServerToRealPath(req.files[1].path ?? "");
+        // let background = converterServerToRealPath(req.files[1].path)
     }
+    await newProduct.save()
+    return responseSuccess(res, 200,  "Create product is successfully!", { productId: newProduct.productId })
+
+    // res.status(200).json({
+    //     status: 200,
+    //     success: true,
+    //     message: "",
+    //     data: newProduct
+    // })
+
+    // } else {
+    //     res.status(400).json({
+    //         status: 400,
+    //         success: false,
+    //         message: "",
+    //         data: null
+    //     })
+    // }
 }
 
 let deleteProduct = async (req, res) => {

@@ -49,10 +49,10 @@ let profile = async (req, res, next) => {
         {
             $project: {
                 // carts: { $size: "$carts" },
-                favorites: { $size: "$favorites" },
-                payments: { $size: "$payments" },
-                address: { $size: "$address" },
-                reviews: { $size: "$reviews" },
+                // favorites: { $size: "$favorites" },
+                // payments: { $size: "$payments" },
+                // address: { $size: "$address" },
+                // reviews: { $size: "$reviews" },
                 orders: 1,
                 firstName: 1,
                 lastName: 1,

@@ -59,15 +59,16 @@ let login = async (req, res) => {
         let checkMatchPassword = await user.comparePassword(password);
         if (checkMatchPassword) {
             token = encodeedToken(user._id)
-            return res.status(200).json({
-                status: 200,
-                message: "",
-                success: true,
-                data: {
-                    successToken: token,
-                    firstName: user.firstName,
-                    lastName: user.lastName
-                }
+            let statusCode = 200
+            if (user.roles === 'admin') {
+                statusCode = 201
+            }
+
+            return responseSuccess(res, statusCode, "Login successfully!", {
+                successToken: token,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                roles: user.roles
             })
         } else {
             return res.status(301).json({

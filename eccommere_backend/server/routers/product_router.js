@@ -13,7 +13,7 @@ router.route("/:productId")
     .delete(productController.deleteProduct)
 
 router.route("/:productId/attributes")
-    .get(productController.productAtributes)
+    .get(productController.getProductAttibute)
     .post(multer({ storage: storage, fileFilter: imageFilter }).single('product_attrbutes'), productController.addProductAttrbute)
 
 router.route('/:productId/attributes/:attributeId')

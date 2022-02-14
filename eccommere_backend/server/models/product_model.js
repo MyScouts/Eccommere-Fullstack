@@ -56,6 +56,8 @@ let productSchema = new Schema({
         getters: true,
         transform: (doc, ret) => {
             if (ret.price) ret.price = ret.price.toString()
+            if (ret.createdAt) ret.createdAt = ret.createdAt.toLocaleString()
+            if (ret.updatedAt) ret.updatedAt = ret.createdAt.toLocaleString()
             delete ret.__v
             delete ret.logical_delete
             return ret;
