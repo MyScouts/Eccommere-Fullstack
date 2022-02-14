@@ -59,3 +59,90 @@ export const getProductAttributeService = async (productId: string) => {
     return null;
   }
 };
+
+export const newProductAttribute = async ({
+  productId,
+  title,
+  description,
+  image,
+}: {
+  productId: string;
+  title: string;
+  description: string;
+  image: File;
+}) => {
+  try {
+    const url = `${BASE_URL}products/${productId}/attributes`;
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("product_attrbutes", image);
+    const response = await RequestHelper.post(url, formData);
+    return response.status;
+  } catch (error) {
+    return 500;
+  }
+};
+
+export const removeAttribueService = async (
+  productId: string,
+  attributeId: string
+) => {
+  try {
+    const url = `${BASE_URL}products/${productId}/attributes/${attributeId}`;
+    const response = await RequestHelper.delete(url, {});
+    return response.status;
+  } catch (error) {
+    return 500;
+  }
+};
+
+export const updateProductAttributeService = async ({
+  productId,
+  attributeId,
+  title,
+  description,
+  image,
+}: {
+  productId: string;
+  attributeId: string;
+  title: string;
+  description: string;
+  image: File | null;
+}) => {
+  try {
+    const url = `${BASE_URL}products/${productId}/attributes/${attributeId}`;
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    if (image) formData.append("product_attrbutes", image);
+    const response = await RequestHelper.put(url, formData);
+    return response.status;
+  } catch (error) {
+    return 500;
+  }
+};
+
+interface IPaginateResponse {
+  itemCount: number;
+  perPage: number;
+  currentPage: number;
+  pageCount: null;
+  items: IProductInfo[];
+}
+
+export const getProductsService = async ({
+  search,
+  page,
+  pageSize,
+}: {
+  search: string;
+  page: number;
+  pageSize: number;
+}) => {
+  try {
+    const url = `${BASE_URL}products?search=${search}&page=${page}&pageSize=${pageSize}`;
+    const response = await RequestHelper.get(url, {});
+    return response.data as IPaginateResponse;
+  } catch (error) {}
+};

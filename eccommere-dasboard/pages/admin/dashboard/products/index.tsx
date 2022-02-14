@@ -5,6 +5,7 @@ import {
   PlusCircleOutlined
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import ProductList from '../../../../components/ProductList/ProductList';
 const ProductsIndex = () => {
   const router = useRouter()
 
@@ -14,6 +15,7 @@ const ProductsIndex = () => {
         <h1 style={{ lineHeight: 0 }}>Products</h1>
         <div onClick={() => router.push("/admin/dashboard/products/create")}><PlusCircleOutlined style={{ fontSize: 20, marginBottom: 5 }} className="button-action" /></div>
       </Row>
+      <ProductList />
     </div>
   )
 }

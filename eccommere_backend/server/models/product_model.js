@@ -1,6 +1,6 @@
 let mongoose = require('mongoose')
 let Schema = mongoose.Schema
-
+const aggregatePaginate = require('mongoose-aggregate-paginate-v2')
 let productSchema = new Schema({
     productId: {
         type: String,
@@ -69,6 +69,6 @@ productSchema.pre('find', async function (docs) {
     this.populate('attributes')
     this.populate('categories')
 });
-
+productSchema.plugin(aggregatePaginate);
 let ProductModel = mongoose.model('products', productSchema)
 module.exports = ProductModel

@@ -6,6 +6,7 @@ const { converterServerToRealPath } = require('../helpers/converter_helper')
 const CategoryModel = require('../models/category_model')
 const generateSequence = require('../helpers/sequence_helper')
 const { responseSuccess } = require('../common/reponseCommon')
+const { PAGINATE_CONFIG } = require('../common/config')
 
 let createProduct = async (req, res) => {
     let { productName, description, price, quantity, categoryIds } = req.body
@@ -32,7 +33,7 @@ let createProduct = async (req, res) => {
         // let background = converterServerToRealPath(req.files[1].path)
     }
     await newProduct.save()
-    return responseSuccess(res, 200,  "Create product is successfully!", { productId: newProduct.productId })
+    return responseSuccess(res, 200, "Create product is successfully!", { productId: newProduct.productId })
 
     // res.status(200).json({
     //     status: 200,
@@ -74,18 +75,66 @@ let product = async (req, res) => {
 }
 
 let products = async (req, res) => {
-    condiction = {}
+    let page = parseInt(req.query.page)
+    let limit = parseInt(req.query.pageSize) > 0 ? parseInt(req.query.pageSize) : PAGE_SIZE
+    let startIndex = (page - 1) * limit
+
+    let condiction = {}
+
+    // check search condiction
     if (req.query.search && req.query.search !== "undefined") {
-        condiction.productName = { $regex: new RegExp(req.query.search, 'i') }
+        condiction = {
+            $or: [
+                { productName: { $regex: new RegExp(req.query.search, 'i') }, },
+                { description: { $regex: new RegExp(req.query.search, 'i') }, },
+                { 'categories.name': { $regex: new RegExp(req.query.search, 'i') }, },
+            ]
+        }
     }
 
-    let products = await paginateHelper(req, ProductModel, condiction, ['categories'], { productName: 0 })
-    res.status(200).json({
-        status: 200,
-        success: true,
-        message: "",
-        data: products
-    })
+    // let products = await paginateHelper(req, ProductModel, condiction, ['categories'], { productName: 0 })
+    let productsQuery = ProductModel.aggregate([
+        {
+            $lookup: {
+                from: 'categories',
+                localField: 'categories',
+                foreignField: '_id',
+                as: 'categories'
+            }
+        }, {
+            $lookup: {
+                from: 'product_attrs',
+                localField: 'attributes',
+                foreignField: '_id',
+                as: 'attributes'
+            }
+        }, {
+            $match: condiction,
+        }, {
+            $project: {
+                productName: 1,
+                categories: 1,
+                description: 1,
+                attributes: 1,
+                avatar: 1,
+                price: 1,
+                productId: 1,
+                sale: 1,
+                rating: 1,
+                background: 1,
+                quantity: 1,
+                price: 1,
+            }
+        }, {
+            $addFields: {
+                price: { $toString: "$price" }
+            }
+        },
+    ])
+
+    const products = await ProductModel.aggregatePaginate(productsQuery, PAGINATE_CONFIG(req.query.page, req.query.pageSize));
+
+    return responseSuccess(res, 200, "Get products is successfully!", products)
 }
 
 let productAtributes = async (req, res) => {
@@ -118,8 +167,8 @@ let updateAtrribute = async (req, res) => {
     res.status(200).json({
         status: 200,
         success: true,
-        message: "",
-        data: product
+        message: "Update is successfully!",
+        // data: product
     })
 }
 
@@ -144,8 +193,8 @@ let addProductAttrbute = async (req, res) => {
     res.status(200).json({
         status: 200,
         success: true,
-        message: "",
-        data: resutl
+        message: "Create product is successfully!",
+        // data: resutl
     })
 }
 
@@ -163,7 +212,7 @@ let deleteAttrbuteProduct = async (req, res) => {
         status: 200,
         success: true,
         message: "",
-        data: product
+        // data: product
     })
 }
 
