@@ -5,7 +5,11 @@ import React, { useEffect } from 'react'
 import { BASE_FILE_URL } from '../../common/appConfig'
 import { IProductInfo } from '../../interface/products'
 import { getProductInfoService } from '../../services/productService'
-
+import {
+    DeleteOutlined,
+    EditOutlined,
+    UploadOutlined
+} from '@ant-design/icons'
 interface IProps {
     productId: string
 }
@@ -30,7 +34,16 @@ const ProductDetail = (props: IProps) => {
 
     return (
         <div >
-            <h1>Product Detail</h1>
+            <Row align='middle' justify='space-between'>
+                <h1>Product Detail</h1>
+                <Row justify='center'>
+                    <div onClick={() => router.push({
+                        pathname: '/admin/dashboard/products/edit/[id]',
+                        query: { id: props.productId }
+                    })}><EditOutlined style={{ fontSize: 20, marginBottom: 5 }} className="button-action" /></div>
+                    <div onClick={() => { }}><DeleteOutlined style={{ fontSize: 20, marginBottom: 5 }} className="button-action" /></div>
+                </Row>
+            </Row>
             <Row align='middle'>
                 <Col span={4} style={{ marginTop: 20 }}>
                     <Avatar shape='square' size={250} src={`${BASE_FILE_URL}${productInfo?.avatar}`} />
@@ -47,7 +60,7 @@ const ProductDetail = (props: IProps) => {
                 <Col span={17}>
                     <h1>{productInfo?.productId}</h1>
                     <h1>{productInfo?.productName}</h1>
-                    <h1>{productInfo?.description}</h1>
+                    <h1 className='one-line'>{productInfo?.description}</h1>
                     <h1>{productInfo?.price}</h1>
                     <h1>{productInfo?.quantity}</h1>
                     <h1>{productInfo?.createdAt}</h1>

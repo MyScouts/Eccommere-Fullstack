@@ -144,5 +144,36 @@ export const getProductsService = async ({
     const url = `${BASE_URL}products?search=${search}&page=${page}&pageSize=${pageSize}`;
     const response = await RequestHelper.get(url, {});
     return response.data as IPaginateResponse;
-  } catch (error) {}
+  } catch (error) { }
 };
+
+
+interface IUpdateProduct extends ICreateProduct {
+  productId: string;
+}
+
+export const updateProductsService = async ({
+  productId,
+  productName,
+  description,
+  price,
+  quantity,
+  avatar,
+  background,
+}: IUpdateProduct) => {
+  try {
+    const url = `${BASE_URL}products/${productId}`;
+    const formData = new FormData();
+    formData.append("productName", productName);
+    formData.append("description", description);
+    formData.append("price", price.toString());
+    formData.append("quantity", quantity.toString());
+    if (avatar) formData.append("product_avatar", avatar);
+    if (background) formData.append("product_background", background);
+    const response = await RequestHelper.post(url, formData);
+    return response.status;
+  } catch (error) {
+    return 500;
+  }
+
+}

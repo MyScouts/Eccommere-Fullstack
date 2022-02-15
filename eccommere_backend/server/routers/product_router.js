@@ -10,6 +10,7 @@ router.route("")
 
 router.route("/:productId")
     .get(productController.product)
+    .post(multer({ storage: storage, fileFilter: imageFilter }).any(['product_avatar', 'product_background']), productController.updateProduct)
     .delete(productController.deleteProduct)
 
 router.route("/:productId/attributes")

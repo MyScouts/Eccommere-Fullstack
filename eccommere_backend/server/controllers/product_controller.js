@@ -227,6 +227,42 @@ let getProductAttibute = async (req, res) => {
     })
 }
 
+const updateProduct = async (req, res) => {
+    let { productId } = req.params
+    let { productName, description, price, sale, rating, background, quantity, categories } = req.body
+    let product = await ProductModel.findOne({ productId: productId })
+    if (product) {
+        product.productName = productName
+        product.description = description
+        product.price = price
+        product.sale = sale
+        product.rating = rating
+        product.background = background
+        product.quantity = quantity
+        product.categories = categories
+
+        if (req.files && req.files.length > 0) {
+            req.files.forEach(file => {
+                if (file.fieldname === 'product_avatar') {
+                    product.avatar = converterServerToRealPath(file.path)
+                }
+                else if (file.fieldname === 'product_background') {
+                    product.background = converterServerToRealPath(file.path)
+                }
+            })
+        }
+        await product.save()
+    }
+    res.status(200).json({
+        status: 200,
+        success: true,
+        message: "Update is successfully!",
+        data: product
+    })
+
+}
+
+
 module.exports = {
     products,
     product,
@@ -237,4 +273,5 @@ module.exports = {
     addProductAttrbute,
     deleteAttrbuteProduct,
     getProductAttibute,
+    updateProduct
 }

@@ -5,6 +5,7 @@
 @import "./layouts/admin_layout.scss";
 //
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
 html,
 body {
   padding: 0;
@@ -41,8 +42,28 @@ a {
   cursor: pointer !important;
   margin-right: 10px !important;
   transition: all 0.3s ease-in-out !important;
+
   //
   &:hover {
     color: #ff4d4f !important;
   }
+}
+
+
+.element-link {
+  cursor: pointer;
+  color: blue;
+
+  &:hover {
+    color: #ff4d4f;
+    text-decoration: underline;
+  }
+}
+
+
+.one-line {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

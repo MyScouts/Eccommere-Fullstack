@@ -1,4 +1,6 @@
 import { Table } from 'antd';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { IProductInfo } from '../../interface/products'
 import { getProductsService } from '../../services/productService';
@@ -11,6 +13,7 @@ interface IPagination {
 }
 
 const ProductList = () => {
+    const router = useRouter();
     const [products, setProducts] = useState<IProductInfo[]>([]);
     const [response, setResponse] = useState<IPagination>({
         current: 1,
@@ -18,30 +21,37 @@ const ProductList = () => {
     });
     const columns = [
         {
-            title: 'Product Id',
+            title: 'Product ID',
             dataIndex: 'productId',
             // sorter: true,
-            // render: name => `${name.first} ${name.last}`,
+            render: (name: string) => <div className='element-link' onClick={() => router.push({
+                pathname: '/admin/dashboard/products/[id]',
+                query: { id: name }
+
+            })}>{name}</div>,
             // width: '20%',
+        }, {
+            title: 'Product Name',
+            dataIndex: 'productName',
+        }, {
+            title: 'Description',
+            dataIndex: 'description',
+            // render: (name: string) => <div className='one-line'>{name}</div>
         },
-        // {
-        //     title: 'Gender',
-        //     dataIndex: 'gender',
-        //     filters: [
-        //         { text: 'Male', value: 'male' },
-        //         { text: 'Female', value: 'female' },
-        //     ],
-        //     width: '20%',
-        // },
-        // {
-        //     title: 'Email',
-        //     dataIndex: 'email',
-        // },
+
+        {
+            title: 'Price',
+            dataIndex: 'price',
+        }, {
+            title: 'Quantity',
+            dataIndex: 'quantity'
+        },
+
     ];
     const getProducts = async () => {
         const result = await getProductsService({
             page: 1,
-            pageSize: 10,
+            pageSize: 5,
             search: ""
         })
         console.log("🚀 ~ file: ProductList.tsx ~ line 47 ~ getProducts ~ result", result)
@@ -59,7 +69,7 @@ const ProductList = () => {
     const loadMoreProducts = async ({ page }: { page: number }) => {
         const result = await getProductsService({
             page: page,
-            pageSize: 10,
+            pageSize: 5,
             search: ""
         })
         if (result && result.itemCount > 0) {
@@ -77,7 +87,7 @@ const ProductList = () => {
     }, [])
 
     return (
-        <div>
+        <div style={{ marginTop: 50 }}>
             {
                 products.length > 0 &&
                 <Table
