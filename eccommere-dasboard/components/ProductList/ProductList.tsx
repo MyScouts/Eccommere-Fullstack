@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Col, Input, Table } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
@@ -79,25 +79,44 @@ const ProductList = () => {
 
     const handleTableChange = (pagination: any, filters: any, sorter: any) => {
         loadMoreProducts({ page: pagination.current })
-        console.log("🚀 ~ file: ProductList.tsx ~ line 60 ~ handleTableChange ~ pagination: any, filters: any, sorter: any", pagination, filters, sorter)
 
     };
+    const onSearchProduct = async (value: string) => {
+        const result = await getProductsService({
+            page: 1,
+            pageSize: 5,
+            search: value
+        })
+        if (result && result.itemCount > 0) {
+            setProducts(result.items)
+            setResponse({
+                current: result.currentPage,
+                pageSize: result.pageCount ?? 1,
+            })
+        }
+    }
     useEffect(() => {
         getProducts()
     }, [])
 
     return (
-        <div style={{ marginTop: 50 }}>
+        <div style={{ marginTop: 10 }}>
             {
                 products.length > 0 &&
-                <Table
-                    columns={columns}
-                    // rowKey={record => record.login.uuid}
-                    dataSource={products}
-                    pagination={{ total: response.pageSize * 10 }}
-                    // loading={loading}
-                    onChange={handleTableChange}
-                />
+                <>
+                    <Col span={5}>
+                        <Input placeholder='Search' onChange={(e) => onSearchProduct(e.target.value)} />
+                    </Col>
+                    <Table
+                        style={{ marginTop: 50 }}
+                        columns={columns}
+                        // rowKey={record => record.login.uuid}
+                        dataSource={products}
+                        pagination={{ total: response.pageSize * 10 }}
+                        // loading={loading}
+                        onChange={handleTableChange}
+                    />
+                </>
             }
         </div>
     )

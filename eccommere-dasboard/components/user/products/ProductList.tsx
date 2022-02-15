@@ -18,11 +18,12 @@ interface IPagination {
 const ProductList = () => {
     const router = useRouter();
     const [products, setProducts] = useState<IProductInfo[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(2);
     const [response, setResponse] = useState<IPagination>({
         current: 1,
         pageSize: 10
     });
-    const {cart, total, addToCart, removeFromCart} = useContext(CartContext)
+    const { cart, total, addToCart, removeFromCart } = useContext(CartContext)
 
     const getProducts = async () => {
         const result = await getProductsService({
@@ -40,16 +41,18 @@ const ProductList = () => {
         }
     }
 
-    const loadMoreProducts = async ({ page }: { page: number }) => {
+    const loadMoreProducts = async () => {
+        setCurrentPage(currentPage + 1)
+
         const result = await getProductsService({
-            page: page,
+            page: currentPage,
             pageSize: 12,
             search: ""
         })
         if (result && result.itemCount > 0) {
             setProducts([...products, ...result.items])
-        }else{
-            message.info("No more products") 
+        } else {
+            message.info("No more products")
         }
     }
 

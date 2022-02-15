@@ -19,7 +19,7 @@ const ModalConfirm = (props: IProps) => {
 
     return (
         <Modal title="Confirm Modal" visible={props.isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-            <p>Some contents...</p>
+            
         </Modal>
     )
 }

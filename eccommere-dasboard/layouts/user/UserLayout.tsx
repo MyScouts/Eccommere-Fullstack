@@ -15,7 +15,7 @@ import { CartContext } from '../../common/CartContext'
 
 const UserLayout: LayoutProps = ({ children }) => {
     const router = useRouter()
-    const { cart, total, addToCart, removeFromCart,removeCart } = useContext(CartContext)
+    const { cart, total, addToCart, removeFromCart, removeCart } = useContext(CartContext)
     console.log("🚀 ~ file: UserLayout.tsx ~ line 19 ~ cart", cart)
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,9 +38,11 @@ const UserLayout: LayoutProps = ({ children }) => {
                         <Menu.Item key="1">
                             <Link href={'/home'}>Home</Link>
                         </Menu.Item>
-                        <Menu.Item key="2">Products</Menu.Item>
+                        <Menu.Item key="2">
+                            <Link href={'/profile/cart'}> Carts </Link>
+                        </Menu.Item>
                         <Menu.Item key="3">
-                            <Link href={'/profile'}>Profile</Link>
+                            <Link href={'/profile/orders'}>Orders</Link>
                         </Menu.Item>
                     </Menu>
 

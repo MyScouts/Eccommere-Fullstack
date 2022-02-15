@@ -1,9 +1,12 @@
 import React from 'react'
+import OrderList from '../../../../components/admin/order_list/OrderList'
 import DefaultLayout from '../../../../layouts/default/DefaultLayout'
 
 const OrdersIndex = () => {
   return (
-    <div>OrdersIndex</div>
+    <div>
+      <OrderList/>
+    </div>
   )
 }
 

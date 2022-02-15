@@ -9,6 +9,7 @@ const paginateHelper = require("../helpers/paginate_helper");
 const mongoose = require('mongoose')
 const { converterServerToRealPath } = require('../helpers/converter_helper');
 const generateSequence = require("../helpers/sequence_helper");
+const { PAGINATE_CONFIG } = require('../common/config')
 
 
 let addFavorites = async (req, res, next) => {
@@ -120,6 +121,47 @@ let profile = async (req, res, next) => {
     })
 }
 
+const getAllOrders = async (req, res) => {
+    let ordersQuery = OrderModel.aggregate([
+        {
+            $lookup: {
+                from: 'orderdetails',
+                localField: 'orders.orderId',
+                foreignField: 'orderdetails.orderId',
+                as: 'orderItems'
+            }
+        }, {
+            $project: {
+                userId: 1,
+                orderId: 1,
+                address: 1,
+                phoneNumber: 1,
+                status: 1,
+                method: 1,
+                itemQuantity: { $size: "$orderItems" },
+                total: { $sum: "$orderItems.price" },
+                acceptTime: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$acceptTime" } },
+                orderTime: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$acceptTime" } },
+                createdAt: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$createdAt" } },
+            }
+        },
+        {
+            $addFields: {
+                total: { $toString: "$total" }
+            }
+        },
+        { $sort: { createdAt: -1 } },
+    ])
+
+    const orders = await OrderModel.aggregatePaginate(ordersQuery, PAGINATE_CONFIG(req.query.page, req.query.pageSize));
+    res.status(200).json({
+        status: 200,
+        success: true,
+        message: "",
+        data: orders
+    })
+}
+
 // 
 let updateProfile = async (req, res, next) => {
     let { firstName, lastName, phoneNumber } = req.body
@@ -203,7 +245,7 @@ let createOrder = async (req, res) => {
         orderId: await generateSequence("OD", "U"),
         address: address,
         phoneNumber: phoneNumber,
-        status: 1,
+        status: 0,
         method: method,
     })
     await order.save()
@@ -306,6 +348,18 @@ let deleteOrder = async (req, res) => {
     })
 }
 
+
+const updateOrderStatus = async (req, res) => {
+    let { orderId, status } = req.body
+    await OrderModel.findOneAndUpdate({ orderId: orderId }, { status })
+    res.status(200).json({
+        status: 200,
+        success: true,
+        message: "",
+        data: true
+    })
+}
+
 module.exports = {
     profile,
     updateProfile,
@@ -315,5 +369,7 @@ module.exports = {
     createOrder,
     myOrders,
     getOrderDetail,
-    deleteOrder
+    deleteOrder,
+    getAllOrders,
+    updateOrderStatus
 }

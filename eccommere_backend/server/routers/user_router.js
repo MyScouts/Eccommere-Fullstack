@@ -35,4 +35,8 @@ router.route("/order/:orderId")
     .get(passport.authenticate('jwt', { session: false }), userController.getOrderDetail)
     .delete(passport.authenticate('jwt', { session: false }), userController.deleteOrder)
 
+router.route("/orders-admin")
+    .get(userController.getAllOrders)
+    .post(userController.updateOrderStatus)
+
 module.exports = router
