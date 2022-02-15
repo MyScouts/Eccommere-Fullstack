@@ -144,9 +144,8 @@ export const getProductsService = async ({
     const url = `${BASE_URL}products?search=${search}&page=${page}&pageSize=${pageSize}`;
     const response = await RequestHelper.get(url, {});
     return response.data as IPaginateResponse;
-  } catch (error) { }
+  } catch (error) {}
 };
-
 
 interface IUpdateProduct extends ICreateProduct {
   productId: string;
@@ -175,5 +174,14 @@ export const updateProductsService = async ({
   } catch (error) {
     return 500;
   }
+};
 
-}
+export const removeProductService = async (productId: string) => {
+  try {
+    const url = `${BASE_URL}products/${productId}`;
+    const response = await RequestHelper.delete(url, {});
+    return response.status;
+  } catch (error) {
+    return 500;
+  }
+};

@@ -4,12 +4,13 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { BASE_FILE_URL } from '../../common/appConfig'
 import { IProductInfo } from '../../interface/products'
-import { getProductInfoService } from '../../services/productService'
+import { getProductInfoService, removeProductService } from '../../services/productService'
 import {
     DeleteOutlined,
     EditOutlined,
     UploadOutlined
 } from '@ant-design/icons'
+import ModalConfirm from '../ModalConfirm/ModalConfirm'
 interface IProps {
     productId: string
 }
@@ -17,6 +18,7 @@ interface IProps {
 const ProductDetail = (props: IProps) => {
     const router = useRouter()
     const [productInfo, setProductInfo] = React.useState<IProductInfo | null>(null)
+    const [showDeleteModal, setShowDeleteModal] = React.useState(false)
     const getProductInfo = async () => {
         const result = await getProductInfoService(props.productId);
         if (result) {
@@ -32,6 +34,19 @@ const ProductDetail = (props: IProps) => {
         getProductInfo()
     }, [])
 
+
+    // 
+    const deleteProduct = async () => {
+        const result = await removeProductService(props.productId);
+        if (result === 200) {
+            message.success({ content: 'Product deleted!', key: 'success', duration: 2 });
+            router.push("/admin/dashboard/products")
+            return;
+        }
+        message.error({ content: 'Product not deleted!', key: 'error', duration: 2 });
+        return;
+    }
+
     return (
         <div >
             <Row align='middle' justify='space-between'>
@@ -41,7 +56,7 @@ const ProductDetail = (props: IProps) => {
                         pathname: '/admin/dashboard/products/edit/[id]',
                         query: { id: props.productId }
                     })}><EditOutlined style={{ fontSize: 20, marginBottom: 5 }} className="button-action" /></div>
-                    <div onClick={() => { }}><DeleteOutlined style={{ fontSize: 20, marginBottom: 5 }} className="button-action" /></div>
+                    <div onClick={() => setShowDeleteModal(true)}><DeleteOutlined style={{ fontSize: 20, marginBottom: 5 }} className="button-action" /></div>
                 </Row>
             </Row>
             <Row align='middle'>
@@ -68,6 +83,7 @@ const ProductDetail = (props: IProps) => {
 
                 </Col>
             </Row>
+            <ModalConfirm isModalVisible={showDeleteModal} handleOkCallback={deleteProduct} setIsModalVisible={(status) => setShowDeleteModal(status)} />
         </div>
     )
 }

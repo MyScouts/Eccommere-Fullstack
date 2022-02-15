@@ -186,12 +186,8 @@ let getOrder = async (req, res) => {
 }
 let createOrder = async (req, res) => {
     let uerId = req.user._id
-
     let { address, phoneNumber, method, items } = req.value.body
-
     let productIds = items.map(item => item.productId)
-
-
     let productCheck = await ProuductModel.find({ productId: { $in: productIds } })
     if (productCheck.length !== productIds.length) {
         return res.status(400).json({
@@ -213,9 +209,6 @@ let createOrder = async (req, res) => {
     await order.save()
 
     items.map(item => {
-        console.log('item:'
-
-            , item)
         let productItem = productCheck.find(product => product.productId.toString() === item.productId)
         let orderItem = new OrderDetails({
             productId: item.productId,
@@ -231,8 +224,7 @@ let createOrder = async (req, res) => {
     res.status(200).json({
         status: 200,
         success: true,
-        message: "",
-        data: order
+        message: "Order created",
     })
 }
 

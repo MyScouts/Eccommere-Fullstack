@@ -53,7 +53,8 @@ let createProduct = async (req, res) => {
 }
 
 let deleteProduct = async (req, res) => {
-    await ProductModel.findByIdAndRemove(req.params.productId)
+    await ProductModel.findOneAndRemove({productId: req.params.productId})
+    await ProductAttrModel.deleteMany({productId: req.params.productId})
     res.status(200).json({
         status: 200,
         success: true,

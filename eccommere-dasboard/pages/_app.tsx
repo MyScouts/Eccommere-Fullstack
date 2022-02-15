@@ -7,6 +7,7 @@ import { ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { getToken } from '../utils/storageUtil'
 import { message } from 'antd'
+import { CartStoreProvider } from '../common/CartContext'
 
 type AppLayoutProps = AppProps & {
   Component: PageWithLayoutType
@@ -35,9 +36,11 @@ function MyApp({ Component, pageProps }: AppLayoutProps) {
 
 
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <CartStoreProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </CartStoreProvider>
   )
 }
 

@@ -10,3 +10,28 @@ export const getUserInfoService = async () => {
     return null;
   }
 };
+
+export const checkoutService = async ({
+  address,
+  phoneNumber,
+  method,
+  items,
+}: {
+  address: string;
+  phoneNumber: string;
+  method: number;
+  items: any[];
+}) => {
+  try {
+    const url = `${BASE_URL}user/orders`;
+    const response = await RequestHelper.post(url, {
+      address,
+      phoneNumber,
+      method,
+      items,
+    });
+    return response.status;
+  } catch (error) {
+    return 500;
+  }
+};
