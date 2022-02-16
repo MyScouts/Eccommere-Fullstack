@@ -18,6 +18,7 @@ const ProductDetail = () => {
     const { cart, total, addToCart, removeFromCart } = useContext(CartContext)
     const [imageShow, setImageShow] = useState<number>(0)
     const getProductInfo = async () => {
+        console.log("🚀 ~ file: [id].tsx ~ line 22 ~ getProductInfo ~ productId", productId)
         const result = await getProductInfoService(productId);
         if (result) {
             setProductInfo(result)
@@ -39,7 +40,7 @@ const ProductDetail = () => {
             const attrImage = attributes.map(attr => attr.imageUrl)
             setImages([productInfo.avatar, ...attrImage])
         }
-    }, [])
+    }, [productInfo, attributes])
     console.log("🚀 ~ file: [id].tsx ~ line 39 ~ useEffect ~ images", images)
 
     return (
@@ -53,11 +54,13 @@ const ProductDetail = () => {
                         {
                             images && images.length > 0
                             && <Col span={8} style={{ padding: "0 2rem 0 2rem" }}>
-                                <img src={`${BASE_FILE_URL}${images[imageShow]}`} alt="product" style={{ width: '100%', height: "500px", objectFit:"cover" }} />
-                                <Row justify='space-between' style={{ marginTop: 10 }}>
+                                <img src={`${BASE_FILE_URL}${images[imageShow]}`} alt="product" style={{ width: '100%', height: "500px", objectFit: "cover" }} className="button-event" />
+                                <Row justify='space-between' style={{ marginTop: 10, width: "100%" }}>
                                     {images.map((image, index) => {
                                         if (index === imageShow) return;
-                                        return <img src={`${BASE_FILE_URL}${image}`} alt="product" style={{ width: '100px', marginTop: 10 }} onClick={() => setImageShow(index)} />
+                                        return <Col style={{ marginTop: 10, flex: 1 }}>
+                                            <img src={`${BASE_FILE_URL}${image}`} style={{ width: '100px', height: "100px", objectFit: "cover" }} alt="product" onClick={() => setImageShow(index)} className="button-event" />
+                                        </Col>
                                     })}
                                 </Row>
                             </Col>

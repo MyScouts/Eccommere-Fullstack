@@ -16,7 +16,6 @@ import { CartContext } from '../../common/CartContext'
 const UserLayout: LayoutProps = ({ children }) => {
     const router = useRouter()
     const { cart, total, addToCart, removeFromCart, removeCart } = useContext(CartContext)
-    console.log("🚀 ~ file: UserLayout.tsx ~ line 19 ~ cart", cart)
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         const user = getUser()
@@ -58,6 +57,7 @@ const UserLayout: LayoutProps = ({ children }) => {
                         <div style={{ color: "white", fontWeight: "bolder", cursor: "pointer" }} onClick={() => {
                             removeCart()
                             router.push('/login')
+                            message.success({ content: 'Logout Success', key: 'success', duration: 2 });
                         }}>Log out</div>
                     </Row>
                 </Header>

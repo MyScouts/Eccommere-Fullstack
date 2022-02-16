@@ -17,12 +17,11 @@ const LoginIndex = () => {
         message.destroy()
         if (result === 201) {
             router.push('admin/dashboard')
-            message.success({ content: 'Login Success Admin Dasboard', key: 'success', duration: 2 });
+            message.success({ content: 'Login Success Admin Dashboard', key: 'success', duration: 2 });
             return;
-
         } else if (result === 200) {
             router.push('/')
-            message.success({ content: 'Login Success For User Usign', key: 'success', duration: 2 });
+            message.success({ content: 'Login Success For User', key: 'success', duration: 2 });
             return;
         } else if (result === 301) {
             message.error({ content: 'Password not match!', key: 'error', duration: 2 });
