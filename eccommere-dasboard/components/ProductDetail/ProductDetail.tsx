@@ -1,7 +1,7 @@
 import { Col, message, Row } from 'antd'
 import Avatar from 'antd/lib/avatar/avatar'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { BASE_FILE_URL } from '../../common/appConfig'
 import { IProductInfo } from '../../interface/products'
 import { getProductInfoService, removeProductService } from '../../services/productService'
@@ -11,6 +11,7 @@ import {
     UploadOutlined
 } from '@ant-design/icons'
 import ModalConfirm from '../ModalConfirm/ModalConfirm'
+import { CartContext } from '../../common/CartContext'
 interface IProps {
     productId: string
 }
@@ -19,6 +20,8 @@ const ProductDetail = (props: IProps) => {
     const router = useRouter()
     const [productInfo, setProductInfo] = React.useState<IProductInfo | null>(null)
     const [showDeleteModal, setShowDeleteModal] = React.useState(false)
+    const { cart, total, addToCart, removeFromCart } = useContext(CartContext)
+
     const getProductInfo = async () => {
         const result = await getProductInfoService(props.productId);
         if (result) {

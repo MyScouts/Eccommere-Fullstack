@@ -2,8 +2,18 @@ import { Button, Checkbox, Col, Form, Input, message, Radio, Row } from 'antd'
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react'
 import { CartContext } from '../../common/CartContext';
+import CartCard from '../../components/user/cart/CartCard';
 import UserLayout from '../../layouts/user/UserLayout'
 import { checkoutService } from '../../services/userService';
+
+interface ICartInfo {
+  productId: string,
+  quantity: number
+  avatar: string
+  name: string
+  price: number
+}
+
 
 const CheckOutIndex = () => {
   const { cart, total, addToCart, removeFromCart, clearCart } = useContext(CartContext)
@@ -95,6 +105,17 @@ const CheckOutIndex = () => {
               </Button>
             </Form.Item>
           </Form>
+        </Col>
+      </Row>
+
+      <Row style={{ marginTop: 50 }}>
+        <Col span={24}>
+          <h1>MY CART</h1>
+          <Row>
+            {
+              cart && cart.length > 0 && cart.map((item: ICartInfo, index: number) => <CartCard cartInfo={item} key={index} />)
+            }
+          </Row>
         </Col>
       </Row>
     </div>

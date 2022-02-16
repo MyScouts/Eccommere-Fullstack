@@ -7,21 +7,27 @@ import Avatar from 'antd/lib/avatar/avatar';
 import { Meta } from 'antd/lib/list/Item';
 import { BASE_FILE_URL } from '../../../common/appConfig';
 import { CartContext } from '../../../common/CartContext';
+import { useRouter } from 'next/router';
 interface IProps {
     product: IProductInfo
 }
 
 const ProductCard = (props: IProps) => {
     const { cart, total, addToCart, removeFromCart } = useContext(CartContext)
-
+    const router = useRouter()
     return (
         <div>
             <Card
                 style={{ width: 300, marginTop: 20 }}
                 cover={
-                    <div style={{ overflow: "hidden", height: "300px" }}>
+                    <div style={{ overflow: "hidden", height: "300px" }} onClick={() => router.push({
+                        pathname: '/product/[id]',
+                        query: {
+                            id: props.product.productId
+                        }
+                    })}>
                         <img
-                            style={{ height: "100%",objectFit:"cover", width: "100%" }}
+                            style={{ height: "100%", objectFit: "cover", width: "100%" }}
                             alt="example"
                             src={`${BASE_FILE_URL}${props.product.avatar}`}
                         />

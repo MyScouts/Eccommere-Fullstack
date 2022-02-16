@@ -67,6 +67,18 @@ export const CartStoreProvider = (props: any) => {
         setCart(newCart);
         const total = newCart.reduce((total, item) => total + item.quantity * item.price, 0);
         setTotal(total);
+    };  
+
+    const updateCart = (productID: string, quantity: number) => {
+        const newCart = cart.map(item => {
+            if (item.productId === productID) {
+                item.quantity = quantity;
+            }
+            return item;
+        });
+        setCart(newCart);
+        const total = newCart.reduce((total, item) => total + item.quantity * item.price, 0);
+        setTotal(total);
     };
 
     const removeFromCart = (product: any) => {
@@ -94,7 +106,7 @@ export const CartStoreProvider = (props: any) => {
         setTotal(0);
     }
     return (
-        <CartContext.Provider value={{ cart, total, addToCart, removeFromCart, removeCart, clearCart }}>
+        <CartContext.Provider value={{ cart, total, addToCart, removeFromCart, removeCart, clearCart,updateCart }}>
             {props.children}
         </CartContext.Provider>
     );
