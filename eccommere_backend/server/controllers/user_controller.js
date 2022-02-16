@@ -62,7 +62,7 @@ let profile = async (req, res, next) => {
                 avatar: 1,
                 address: 1,
                 emailVerified: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$emailVerified" } },
-                phoneVerified: 1,
+                phoneVerified: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$phoneVerified" } },
             }
         },
         {

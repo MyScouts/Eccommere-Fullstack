@@ -32,9 +32,11 @@ const ProfileIndex = () => {
                     </Col>
                 </Row>
 
-                <Row style={{ marginTop: 20 }} align='top'>
-                    <Col span={3}>
-                        <Avatar size={100} src={userInfo?.avatar !== null && userInfo?.avatar !== "" ? `${BASE_FILE_URL}${userInfo?.avatar}` : `https://joeschmoe.io/api/v1/random`} />
+                <Row style={{ marginTop: 20, backgroundColor: "white", padding: "1rem", borderRadius: 5, boxShadow: "0 0 1px black" }} align='top'>
+                    <Col span={3} style={{ marginTop: 40, }}>
+                        <Row align='middle' justify='center'>
+                            <Avatar size={100} src={userInfo?.avatar !== null && userInfo?.avatar !== "" ? `${BASE_FILE_URL}${userInfo?.avatar}` : `https://joeschmoe.io/api/v1/random`} />
+                        </Row>
                     </Col>
                     <Col span={20}>
                         <Row>
@@ -79,6 +81,24 @@ const ProfileIndex = () => {
                             </Col>
                             <Col span={17}>
                                 <h3 >{userInfo?.address} </h3>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col span={3}>
+                                <h3>Email Verified:</h3>
+                            </Col>
+                            <Col span={17}>
+                                <h3 >{userInfo?.emailVerified} </h3>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col span={3}>
+                                <h3>Phone Verified:</h3>
+                            </Col>
+                            <Col span={17}>
+                                <h3 >{userInfo?.phoneVerified} </h3>
                             </Col>
                         </Row>
 
