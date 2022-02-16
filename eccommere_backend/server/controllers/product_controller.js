@@ -53,8 +53,8 @@ let createProduct = async (req, res) => {
 }
 
 let deleteProduct = async (req, res) => {
-    await ProductModel.findOneAndRemove({productId: req.params.productId})
-    await ProductAttrModel.deleteMany({productId: req.params.productId})
+    await ProductModel.findOneAndRemove({ productId: req.params.productId })
+    await ProductAttrModel.deleteMany({ productId: req.params.productId })
     res.status(200).json({
         status: 200,
         success: true,
@@ -125,6 +125,10 @@ let products = async (req, res) => {
                 background: 1,
                 quantity: 1,
                 price: 1,
+                createdAt: 1,
+                updatedAt: 1,
+                createdAt: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                updatedAt: { $dateToString: { format: "%Y-%m-%d", date: "$updatedAt" } }
             }
         }, {
             $addFields: {

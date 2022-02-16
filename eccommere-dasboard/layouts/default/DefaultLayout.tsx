@@ -16,6 +16,7 @@ import { IUserInfo } from '../../interface/user';
 import Text from 'antd/lib/typography/Text';
 import { getUserInfoService } from '../../services/userService';
 import Link from 'next/link';
+import { BASE_FILE_URL } from '../../common/appConfig';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -100,12 +101,12 @@ const DefaultLayout: LayoutProps = ({ children }) => {
                 top: 0,
                 bottom: 0,
             }}
-                theme="light"
+                theme="dark"
             >
-                <div className="logo">
-                    <h1>Admin Site</h1>
+                <div className="logo" style={{ color: "white" }}>
+                    {/* <h1 style={{ color: "white", fontSize: "1.5rem", fontWeight: "bolder", textTransform: "uppercase" }}>Admin</h1> */}
                 </div>
-                <Menu theme="light" defaultSelectedKeys={['1']} mode="inline">
+                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                     {menuObjects.map((menu, index) => {
                         if (menu.children) {
                             return (
@@ -141,7 +142,7 @@ const DefaultLayout: LayoutProps = ({ children }) => {
                 >
                     <Row align='middle' justify='end' style={{ padding: "0px 2rem" }}>
                         <Text className='hello-text-header' onClick={() => router.push('/admin/profile')}>Hello, {userInfo?.firstName} {userInfo?.lastName}</Text>
-                        <Avatar src={`https://joeschmoe.io/api/v1/random`} style={{ marginRight: 15 }} />
+                        <Avatar src={userInfo?.avatar !== null && userInfo?.avatar !== "" ? `${BASE_FILE_URL}${userInfo?.avatar}` : `https://joeschmoe.io/api/v1/random`} style={{ marginRight: 15 }} />
                         <div className='button-event' >
                             <Popconfirm placement='bottomRight' title="Do you wan't logout!" okText="Yes" cancelText="No" onConfirm={logoutHanlder}>
                                 <LogoutOutlined style={{ fontSize: 20, color: "#FC4F4F" }} />

@@ -6,7 +6,9 @@ import DefaultLayout from '../../../layouts/default/DefaultLayout'
 const Home = () => {
     return (
         <div>
-            adads
+            <Head>
+                <title>Home</title>
+            </Head>
         </div>
     )
 }

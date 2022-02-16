@@ -3,7 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { IOrderInfo } from '../../../interface/user';
 import { getAdminOrdersService, updateOrderStatus } from '../../../services/userService';
 
-
+import {
+    DeleteOutlined,
+    EditOutlined,
+    UploadOutlined
+} from '@ant-design/icons';
 
 
 interface IPagination {
@@ -19,8 +23,8 @@ const OrderList = () => {
         pageSize: 10
     });
 
-    const [updateStatus, setUpdateStatus] = useState<boolean>(false)
     const [orderInfo, setOrderInfo] = useState<IOrderInfo | null>(null)
+    const [updateStatus, setUpdateStatus] = useState<boolean>(false)
 
     const getOrders = async () => {
         const result = await getAdminOrdersService({
@@ -102,7 +106,7 @@ const OrderList = () => {
     }
 
     const updateStatusCallback = async (status: boolean) => {
-        if(status){
+        if (status) {
             loadMoreOrders({ page: currentPage })
         }
     }
@@ -143,6 +147,17 @@ interface IProps {
 
 const UpdateOrderStatusModal = (props: IProps) => {
     const [form] = Form.useForm();
+    const [orderInfo, setOrderInfo] = useState<IOrderInfo | null>(null)
+
+    useEffect(() => {
+        if (props.orderInfo) {
+            setOrderInfo(props.orderInfo)
+            form.setFieldsValue({
+                status: props.orderInfo.status.toString()
+            })
+        }
+    }, [props.orderInfo])
+
     const handleOk = () => {
         form.validateFields()
             .then(async (values) => {
@@ -163,23 +178,24 @@ const UpdateOrderStatusModal = (props: IProps) => {
             })
     }
     const handleCancel = () => {
+        setOrderInfo(null)
+        form.resetFields();
         props.setIsModalVisible(false)
     }
 
     return (
         <Modal title="Confirm Modal" visible={props.isModalVisible} onOk={handleOk} onCancel={handleCancel} width={700}>
             {
-                props.orderInfo &&
+                orderInfo &&
                 <Form
+                    initialValues={{
+                        status: orderInfo?.status.toString()
+                    }}
                     name="basic"
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 16 }}
-                    initialValues={{
-                        status: props.orderInfo?.status
-                    }}
                     autoComplete="off"
                     form={form}
-
                 >
                     <Form.Item
                         label="Status"

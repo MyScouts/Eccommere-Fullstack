@@ -19,10 +19,8 @@ const ProductList = () => {
     const router = useRouter();
     const [products, setProducts] = useState<IProductInfo[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(2);
-    const [response, setResponse] = useState<IPagination>({
-        current: 1,
-        pageSize: 10
-    });
+    const [response, setResponse] = useState<IPagination>({ current: 1, pageSize: 10 });
+    const [disableButton, setDisableButton] = useState<boolean>(true);
     const { cart, total, addToCart, removeFromCart } = useContext(CartContext)
 
     const getProducts = async () => {
@@ -49,13 +47,15 @@ const ProductList = () => {
             pageSize: 12,
             search: ""
         })
-        if (result && result.itemCount > 0) {
+        if (result && result.items.length > 0) {
             setProducts([...products, ...result.items])
-        } else {
-            message.info("No more products")
+            return
         }
-    }
+        setDisableButton(false)
+        console.log("🚀 ~ file: ProductList.tsx ~ line 53 ~ loadMoreProducts ~ result", result)
+        message.info("No more products")
 
+    }
 
     useEffect(() => {
         getProducts()
@@ -74,11 +74,14 @@ const ProductList = () => {
                     }
                 </Row>
 
-                <Row justify='center' style={{ marginTop: 50 }}>
-                    <Button onClick={loadMoreProducts}>
-                        Load More
-                    </Button>
-                </Row>
+                {
+                    disableButton && <Row justify='center' style={{ marginTop: 50 }}>
+                        <Button onClick={loadMoreProducts}>
+                            Load More
+                        </Button>
+                    </Row>
+                }
+
             </Col>
         </Row>
     )

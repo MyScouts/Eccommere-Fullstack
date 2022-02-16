@@ -57,15 +57,17 @@ const OrderList = () => {
 
             <div style={{ marginTop: 50 }}>
                 {
-                    orders && orders.length > 0 &&
-                    <Table
-                        columns={columns}
-                        // rowKey={record => record.login.uuid}
-                        dataSource={orders}
-                    // pagination={{ total: response.pageSize * 10 }}
-                    // loading={loading}
-                    // onChange={handleTableChange}
-                    />
+                    orders && orders.length > 0 ?
+                        <Table
+                            columns={columns}
+                            // rowKey={record => record.login.uuid}
+                            dataSource={orders}
+                        // pagination={{ total: response.pageSize * 10 }}
+                        // loading={loading}
+                        // onChange={handleTableChange}
+                        />
+                        :
+                        <div>No Orders</div>
                 }
             </div>
         </div>

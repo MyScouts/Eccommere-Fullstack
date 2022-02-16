@@ -27,17 +27,21 @@ const CartIndex = () => {
             </Row>
 
             {
-                cart && cart.length > 0 &&
-                <>
-                    <Row style={{ marginTop: 20 }} justify="end">
-                        <Col>
-                            <h1>Total: {total}</h1>
-                            <Button onClick={() => router.push('/profile/checkout')}>
-                                Order Now
-                            </Button>
-                        </Col>
-                    </Row>
-                </>
+                cart && cart.length > 0 ?
+                    <>
+                        <Row style={{ marginTop: 20 }} justify="end">
+                            <Col>
+                                <h1>Total: {total}</h1>
+                                <Button onClick={() => router.push('/profile/checkout')}>
+                                    Order Now
+                                </Button>
+                            </Col>
+                        </Row>
+                    </>
+                    :
+                    <div>
+                        <h1>No cart</h1>
+                    </div>
             }
         </div>
     )

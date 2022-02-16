@@ -1,8 +1,9 @@
-let mongoose = require('mongoose')
-let bcrypt = require('bcryptjs')
-let Schema = mongoose.Schema
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const Schema = mongoose.Schema
+const aggregatePaginate = require('mongoose-aggregate-paginate-v2')
 
-let userSchema = new Schema({
+const userSchema = new Schema({
     firstName: {
         type: String,
         lowercase: true
@@ -31,7 +32,6 @@ let userSchema = new Schema({
     }],
     phoneNumber: {
         type: String,
-        unique: true,
         maxlength: 10,
         minlength: 10,
         default: "",
@@ -153,5 +153,6 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 // 
-let UserModel = mongoose.model('users', userSchema)
+userSchema.plugin(aggregatePaginate);
+const UserModel = mongoose.model('users', userSchema)
 module.exports = UserModel

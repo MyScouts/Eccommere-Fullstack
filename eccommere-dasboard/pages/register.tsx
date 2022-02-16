@@ -11,7 +11,6 @@ import { adminLoginService, registerService } from '../services/authService'
 const RegisterIndex = () => {
     const router = useRouter()
     const onFinish = async (values: any) => {
-        console.log('Success:', values);
         message.loading({ content: 'Loading...', key: 'loading', });
         const result = await registerService(values) as number
         message.destroy()

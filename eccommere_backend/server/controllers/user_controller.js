@@ -60,6 +60,7 @@ let profile = async (req, res, next) => {
                 phoneNumber: 1,
                 email: 1,
                 avatar: 1,
+                address: 1,
                 emailVerified: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$emailVerified" } },
                 phoneVerified: 1,
             }
@@ -164,8 +165,8 @@ const getAllOrders = async (req, res) => {
 
 // 
 let updateProfile = async (req, res, next) => {
-    let { firstName, lastName, phoneNumber } = req.body
-    await UserModel.findByIdAndUpdate(req.user._id, { firstName, lastName, phoneNumber })
+    let { firstName, lastName, phoneNumber, address } = req.body
+    await UserModel.findByIdAndUpdate(req.user._id, { firstName, lastName, phoneNumber, address })
 
     if (req.file) {
         await UserModel.findByIdAndUpdate(req.user._id, { avatar: converterServerToRealPath(req.file.path) })
@@ -192,40 +193,6 @@ let myFavorites = async (req, res) => {
     })
 }
 
-let getAllUsers = async (req, res) => {
-    condiction = {}
-    if (req.query.search && req.query.search !== "undefined") {
-        condiction.productName = { $regex: new RegExp(req.query.search, 'i') }
-    }
-
-    let users = await UserModel.aggregate(
-        [
-            {
-                $match: {
-                    logical_delete: { $exists: true }
-                }
-            },
-            // {
-            //     $facet: {
-
-            //         metadata: [{ $count: "total" }, { $addFields: { page: 1 } }],
-            //         data: [{ $skip: 1 }, { $limit: 10 }] //- add projection here wish you re-shape the docs
-            //     }
-            // }
-        ]
-    )
-
-    res.status(200).json({
-        status: 200,
-        success: true,
-        message: "",
-        data: users
-    })
-}
-
-let getOrder = async (req, res) => {
-
-}
 let createOrder = async (req, res) => {
     let uerId = req.user._id
     let { address, phoneNumber, method, items } = req.value.body
@@ -360,6 +327,61 @@ const updateOrderStatus = async (req, res) => {
     })
 }
 
+const getAllUsers = async (req, res) => {
+    const usersQuery = UserModel.aggregate([
+        {
+            $project: {
+                _id: 1,
+                firstName: 1,
+                lastName: 1,
+                phoneNumber: 1,
+                avatar: 1,
+                logical_delete: 1,
+                email: 1,
+                emailVerified: 1,
+                phoneVerified: 1,
+                roles: 1,
+                uerId: 1,
+                address: 1,
+                updateAt: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$updatedAt" } },
+                createdAt: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$createdAt" } },
+            },
+
+        },
+        {
+            $sort: { createdAt: -1 }
+        }
+    ]);
+    const users = await UserModel.aggregatePaginate(usersQuery, PAGINATE_CONFIG(req.query.page, req.query.pageSize));
+    res.status(200).json({
+        status: 200,
+        success: true,
+        message: "",
+        data: users
+    })
+}
+
+const updateUser = async (req, res) => {
+    let {userId} = req.params
+    console.log("🚀 ~ file: user_controller.js ~ line 364 ~ updateUser ~ userId", userId)
+    let { firstName, lastName, phoneNumber, avatar, email, emailVerified, phoneVerified, roles, address } = req.body
+    console.log("🚀 ~ file: user_controller.js ~ line 365 ~ updateUser ~ firstName, lastName, phoneNumber, avatar, email, emailVerified, phoneVerified, roles, address", firstName, lastName, phoneNumber, avatar, email, emailVerified, phoneVerified, roles, address)
+
+    if (emailVerified === 1 && emailVerified !== undefined) {
+        emailVerified = new Date()
+    }
+    if (phoneVerified === 1 && phoneVerified !== undefined) {
+        phoneVerified = new Date()
+    }
+    await UserModel.findOneAndUpdate({ _id: userId }, { firstName, lastName, phoneNumber, emailVerified, phoneVerified, roles, address })
+    res.status(200).json({
+        status: 200,
+        success: true,
+        message: "",
+    })
+
+}
+
 module.exports = {
     profile,
     updateProfile,
@@ -371,5 +393,7 @@ module.exports = {
     getOrderDetail,
     deleteOrder,
     getAllOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    getAllUsers,
+    updateUser
 }

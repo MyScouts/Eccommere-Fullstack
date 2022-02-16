@@ -39,4 +39,9 @@ router.route("/orders-admin")
     .get(userController.getAllOrders)
     .post(userController.updateOrderStatus)
 
+router.route('/admin')
+    .get(passport.authenticate('jwt', { session: false }), userController.getAllUsers)
+
+router.route('/:userId')
+    .post(passport.authenticate('jwt', { session: false }), userController.updateUser)
 module.exports = router

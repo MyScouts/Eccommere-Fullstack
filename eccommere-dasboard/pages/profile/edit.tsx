@@ -1,11 +1,12 @@
 import { AutoComplete, Button, Cascader, Checkbox, Col, Form, Input, InputNumber, message, Row, Select, Upload } from 'antd';
 import { Option } from 'antd/lib/mentions';
 import React, { useEffect, useState } from 'react'
-import { IUserInfo } from '../../../interface/user';
-import DefaultLayout from '../../../layouts/default/DefaultLayout'
-import { getUserInfoService, updateProfileService } from '../../../services/userService';
 import { UploadOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import { getUserInfoService, updateProfileService } from '../../services/userService';
+import { IUserInfo } from '../../interface/user';
+import DefaultLayout from '../../layouts/default/DefaultLayout';
+import UserLayout from '../../layouts/user/UserLayout';
 const EditProfile = () => {
     const [userInfo, setUserInfo] = useState<IUserInfo | null>(null)
     const getUserInfo = async () => {
@@ -35,7 +36,7 @@ const EditProfile = () => {
         }) as number
         message.destroy()
         if (result === 200) {
-            router.push('/admin/profile')
+            router.push('/profile')
             message.success({ content: 'Register is successfully!', key: 'success', duration: 2 });
             return;
         } else {
@@ -155,5 +156,5 @@ const EditProfile = () => {
 
 }
 
-EditProfile.layout = DefaultLayout
+EditProfile.layout = UserLayout
 export default EditProfile

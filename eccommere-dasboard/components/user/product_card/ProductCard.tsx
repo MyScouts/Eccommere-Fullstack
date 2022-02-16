@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Card } from 'antd'
 import React, { useContext } from 'react'
 import { IProductInfo } from '../../../interface/products'
@@ -18,10 +19,14 @@ const ProductCard = (props: IProps) => {
             <Card
                 style={{ width: 300, marginTop: 20 }}
                 cover={
-                    <img
-                        alt="example"
-                        src={`${BASE_FILE_URL}${props.product.avatar}`}
-                    />
+                    <div style={{ overflow: "hidden", height: "300px" }}>
+                        <img
+                            style={{ height: "100%",objectFit:"cover", width: "100%" }}
+                            alt="example"
+                            src={`${BASE_FILE_URL}${props.product.avatar}`}
+                        />
+                    </div>
+
                 }
                 actions={[
                     <HeartOutlined key="Love" />,

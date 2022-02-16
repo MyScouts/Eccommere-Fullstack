@@ -7,6 +7,7 @@ import {
     EditOutlined
 } from '@ant-design/icons';
 import Link from 'next/link'
+import { BASE_FILE_URL } from '../../../common/appConfig'
 const ProfileIndex = () => {
 
     const [userInfo, setUserInfo] = useState<IUserInfo | null>(null)
@@ -31,9 +32,9 @@ const ProfileIndex = () => {
                     </Col>
                 </Row>
 
-                <Row style={{ marginTop: 20 }} align='middle'>
+                <Row style={{ marginTop: 20 }} align='top'>
                     <Col span={3}>
-                        <Avatar size={100} src={userInfo?.avatar !== null && userInfo?.avatar !== "" ? userInfo?.avatar : `https://joeschmoe.io/api/v1/random`} />
+                        <Avatar size={100} src={userInfo?.avatar !== null && userInfo?.avatar !== "" ? `${BASE_FILE_URL}${userInfo?.avatar}` : `https://joeschmoe.io/api/v1/random`} />
                     </Col>
                     <Col span={20}>
                         <Row>
@@ -51,6 +52,7 @@ const ProfileIndex = () => {
                             <Col span={17}>
                                 <h3 style={{ textTransform: "capitalize" }}>{userInfo?.lastName} </h3>
                             </Col>
+
                         </Row>
 
                         <Row>
@@ -68,6 +70,15 @@ const ProfileIndex = () => {
                             </Col>
                             <Col span={17}>
                                 <h3 >{userInfo?.phoneNumber} </h3>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col span={3}>
+                                <h3>Address:</h3>
+                            </Col>
+                            <Col span={17}>
+                                <h3 >{userInfo?.address} </h3>
                             </Col>
                         </Row>
 

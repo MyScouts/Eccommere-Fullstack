@@ -21,6 +21,7 @@ const ProductList = () => {
     });
     const columns = [
         {
+            width: '10%',
             title: 'Product ID',
             dataIndex: 'productId',
             // sorter: true,
@@ -31,6 +32,7 @@ const ProductList = () => {
             })}>{name}</div>,
             // width: '20%',
         }, {
+            width: '20%',
             title: 'Product Name',
             dataIndex: 'productName',
         }, {
@@ -45,7 +47,15 @@ const ProductList = () => {
         }, {
             title: 'Quantity',
             dataIndex: 'quantity'
-        },
+        },{
+            width: '10%',
+            title: 'Create Date',
+            dataIndex: 'createdAt'
+        },{
+            width: '10%',
+            title: 'Update Date',
+            dataIndex: 'updatedAt'
+        }
 
     ];
     const getProducts = async () => {

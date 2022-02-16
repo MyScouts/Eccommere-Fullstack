@@ -44,6 +44,9 @@ const UserLayout: LayoutProps = ({ children }) => {
                         <Menu.Item key="3">
                             <Link href={'/profile/orders'}>Orders</Link>
                         </Menu.Item>
+                        <Menu.Item key="4">
+                            <Link href={'/profile'}>Profile</Link>
+                        </Menu.Item>
                     </Menu>
 
                     <Row justify='end' style={{ marginLeft: "auto" }} align="middle">
@@ -52,7 +55,10 @@ const UserLayout: LayoutProps = ({ children }) => {
                                 <ShoppingCartOutlined style={{ fontSize: 25, color: "white" }} />
                             </Badge>
                         </div>
-                        <div style={{ color: "white", fontWeight: "bolder", cursor: "pointer" }}>Log out</div>
+                        <div style={{ color: "white", fontWeight: "bolder", cursor: "pointer" }} onClick={() => {
+                            removeCart()
+                            router.push('/login')
+                        }}>Log out</div>
                     </Row>
                 </Header>
                 <Content style={{ padding: '0 50px', minHeight: "86vh" }}>
